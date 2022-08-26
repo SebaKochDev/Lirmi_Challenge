@@ -1,0 +1,47 @@
+﻿@using System.Net.Http.Json
+@using Lirmi.Challenge.WebApp.Models;
+@inject HttpClient httpClient
+
+
+@page "/challenge"
+
+
+<MudTable Items="@ChallengeItems" Hover="true" Bordered="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info">
+   
+      <ToolBarContent>
+        <MudText Typo="Typo.h6">Challenge - Lirmi </MudText>
+        <MudSpacer />
+      </ToolBarContent>
+
+    <HeaderContent>
+        <MudTh>Colegio</MudTh>
+        <MudTh>Curso</MudTh>
+        <MudTh>Asignatura</MudTh>
+        
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Colegio">@context.colegio</MudTd>
+        <MudTd DataLabel="Curso">@context.curso</MudTd>
+        <MudTd DataLabel="Asignatura">@context.asignatura</MudTd>
+        
+    </RowTemplate>
+     <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
+
+
+
+
+@code {
+
+    
+    private bool _loading = true;
+    private IEnumerable<ChallengeModel> ChallengeItems = new List<ChallengeModel>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        ChallengeItems = await httpClient.GetFromJsonAsync<List<ChallengeModel>>("https://localhost:7179/api/Challenge");
+        _loading = false;
+    }
+}
